@@ -24,11 +24,16 @@ Page {
         id: categoriesModel
     }
 
-    ListView {
+
+    JollaListView {
         id: listView
-        anchors.fill: parent
 
         model: categoriesModel
+        header: PageHeader {
+            title: "Categories"
+        }
+        anchors.fill: parent
+
 
         delegate:  Item {
             id: listItem
@@ -54,18 +59,18 @@ Page {
                     Label {
                         id: mainText
                         text: model.title
-                        font.weight: Font.Bold
-                        font.pixelSize: 26
-                        color: (model.unreadcount > 0) ? "#000033" : "#888888";
+                        // font.weight: Font.Bold
+                        font.pixelSize: theme.fontSizeMedium
+                        color: (model.unreadcount > 0) ? theme.primaryColor: theme.secondaryColor;
 
                     }
 
                     Label {
                         id: subText
                         text: model.subtitle
-                        font.weight: Font.Light
-                        font.pixelSize: 22
-                        color: (model.unreadcount > 0) ? "#cc6633" : "#888888"
+                        //  font.weight: Font.Light
+                        font.pixelSize: theme.fontSizeSmall
+                        color: (model.unreadcount > 0) ? theme.highlightColor : theme.secondaryHighlightColor
 
                         visible: text != ""
                     }
@@ -91,6 +96,7 @@ Page {
     ScrollDecorator {
         flickableItem: listView
     }
+
 
     function updateCategories() {
         var gr = rootWindow.getGoogleReader();
@@ -133,7 +139,7 @@ Page {
             }
 
             if(   (totalUnreadCount > 0)
-               || ((showAll) && someCategories)) {
+                    || ((showAll) && someCategories)) {
                 //Add the "All category"
                 categoriesModel.insert(0, {
                                            title: qsTr("All Categories"),
