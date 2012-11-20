@@ -48,6 +48,10 @@ Page {
                     updateFeeds();
                 }
             }
+            MenuItem {
+                text: qsTr("Jump to next")
+                onClicked: if(!loading) jumpToChosenFeed()
+            }
         }
 
         delegate:  Item {
@@ -114,7 +118,7 @@ Page {
             id: delayedClose
             interval: 500; running: false; repeat: false
             onTriggered:  {
-                feedsMenu.close(); pageStack.pop();
+                pageStack.pop();
             }
         }
 
@@ -248,21 +252,7 @@ Page {
             showFeed(feedId);
         } else {
             //Close feeds window
-            feedsMenu.close(); pageStack.pop();
+            pageStack.pop();
         }
     }
-
-/*    ToolBarLayout {
-        id: feedsTools
-
-        ToolIcon { iconId: "toolbar-back"; onClicked: { feedsMenu.close(); pageStack.pop(); } }
-        BusyIndicator {
-            visible: loading
-            running: loading
-            platformStyle: BusyIndicatorStyle { size: 'medium' }
-        }
-        ToolIcon { iconId: "toolbar-down"; visible: !loading; onClicked: { jumpToChosenFeed(); } }
-        ToolIcon { iconId: "toolbar-view-menu" ; onClicked: (feedsMenu.status == DialogStatus.Closed) ? feedsMenu.open() : feedsMenu.close() }
-    }*/
-
 }

@@ -49,6 +49,7 @@ Page {
                     //console.log("Updating categories with showAll: "+newval+"\n");
                     retrieveItemListData();
                 }
+                z:1
             }
 
             MenuItem {
@@ -59,6 +60,11 @@ Page {
                     var gr = rootWindow.getGoogleReader();
                     gr.markFeedRead(feedId, markFeedReadCompleted);
                 }
+            }
+
+            MenuItem {
+                text: qsTr("Jump to next")
+                onClicked: if(!loading) startJumpToEntry()
             }
         }
 
@@ -138,7 +144,7 @@ Page {
             id: delayedClose
             interval: 500; running: false; repeat: false
             onTriggered:  {
-                itemListMenu.close(); pageStack.pop();
+                pageStack.pop();
             }
         }
 
@@ -265,7 +271,7 @@ Page {
 
         if(!lookingForItem) {
             loading=false;
-            itemListMenu.close(); pageStack.pop();
+            pageStack.pop();
         }
     }
 
@@ -282,18 +288,4 @@ Page {
             }
         }
     }
-
-
-   /* ToolBarLayout {
-        id: itemListTools
-
-        ToolIcon { iconId: "toolbar-back"; onClicked: { itemListMenu.close(); pageStack.pop();} }
-        BusyIndicator {
-            visible: loading
-            running: loading
-            platformStyle: BusyIndicatorStyle { size: 'medium' }
-        }
-        ToolIcon { iconId: "toolbar-down"; visible: !loading; onClicked: { startJumpToEntry(); } }
-        ToolIcon { iconId: "toolbar-view-menu" ; onClicked: (itemListMenu.status == DialogStatus.Closed) ? itemListMenu.open() : itemListMenu.close() }
-    }*/
 }

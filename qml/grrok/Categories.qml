@@ -61,6 +61,12 @@ Page {
                     }
                 }
             }
+
+            MenuItem {
+                id: jump
+                text: qsTr("Jump to next")
+                onClicked: if(!loading) { jumpToChosenCategory(); }
+            }
         }
 
 
@@ -236,17 +242,4 @@ Page {
         showCategory(gr.pickCategory());
     }
 
-    /*
-    ToolBarLayout {
-        id: categoriesTools
-
-        ToolIcon { iconId: "toolbar-back"; onClicked: {categoriesMenu.close(); pageStack.pop(); } }
-        BusyIndicator {
-            visible: loading
-            running: loading
-            platformStyle: BusyIndicatorStyle { size: 'medium' }
-        }
-        ToolIcon { iconId: "toolbar-down"; visible: !loading; onClicked: { jumpToChosenCategory(); } }
-        ToolIcon { iconId: "toolbar-view-menu" ; onClicked: (categoriesMenu.status === DialogStatus.Closed) ? categoriesMenu.open() : categoriesMenu.close() }
-    }*/
 }

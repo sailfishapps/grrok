@@ -27,14 +27,75 @@ Page {
 
     anchors.margins: 0
 
-    Flickable {
+    JollaFlickable {
         id: flick
-        width: parent.width;
-        height: parent.height
+        anchors.fill: parent
         contentWidth: itemView.width
-        contentHeight: itemView.height
+        contentHeight: (itemView.height > itemPage.height)? itemView.height : itemPage.height+1
         interactive: true
         clip: true
+
+        PullDownMenu {
+            id:menu
+            width: itemPage.width
+
+            MenuItem {
+                id: toggleUnread
+                text: ((unread)? qsTr("Mark item read") : qsTr("Mark item unread"))
+                onClicked: {
+                    var gr = rootWindow.getGoogleReader();
+                    gr.markEntryRead(feedId, itemId, unread, null);
+
+                    unread = !unread;
+                }
+            }
+
+            MenuItem {
+                id: openInBrowser
+                text: qsTr("Open in Web Browser")
+                enabled: (url && (url != "")) ? true: false
+                onClicked: {
+                    Qt.openUrlExternally(url);
+                }
+            }
+
+            MenuItem {
+                id: nextMode
+                visible: false
+                enabled: false
+                text: ((nextStaysInFeed)? qsTr("Next Button: Stay in Feed"):
+                                          ((nextStaysInCategory) ? qsTr("Next Button: Stay in Category") :
+                                                                   qsTr("Next Button: Any Category")))
+                onClicked: {
+                    if(nextStaysInFeed) {
+                        //Change to category
+                        nextStaysInCategory = true;
+                        nextStaysInFeed = false;
+                    } else if(nextStaysInCategory) {
+                        //Change to no restriction
+                        nextStaysInCategory = false;
+                        nextStaysInFeed = false;
+                    } else {
+                        //Change to stay in feed
+                        nextStaysInCategory = true;
+                        nextStaysInFeed = true;
+                    }
+                }
+            }
+            MenuItem {
+                text: qsTr("Jump to next")
+                onClicked: {
+                    if(unread) {
+                        var gr = rootWindow.getGoogleReader();
+                        gr.markEntryRead(feedId, itemId, true);
+                        unread = false;
+                    }
+                    if(!loading)
+                        startJumpToEntry();
+                }
+            }
+        }
+
 
         WebView {
             id: itemView
@@ -43,6 +104,7 @@ Page {
             settings.defaultFontSize: 22
             preferredWidth: flick.width
             preferredHeight: flick.height
+
 
 //            onUrlChanged: {
 //                Qt.openUrlExternally(url);
@@ -58,6 +120,23 @@ Page {
             // Can probably hack around it by copying:
             // http://osdir.com/ml/kde-commits/2011-12/msg03459.html
             // https://projects.kde.org/projects/extragear/base/plasma-mobile/repository/revisions/8ea2f26344f7968d90678035bf800ec9deb02c7f/entry/applications/about/package/contents/ui/FlickableWebView.qml
+        }
+
+        PushUpMenu {
+            width: itemPage.width
+            MenuItem {
+                text: qsTr("Jump to next")
+                onClicked: {
+                    if(unread) {
+                        var gr = rootWindow.getGoogleReader();
+                        gr.markEntryRead(feedId, itemId, true);
+                        unread = false;
+                    }
+                    if(!loading)
+                        startJumpToEntry();
+                }
+            }
+            z:1
         }
     }
 
@@ -124,8 +203,7 @@ Page {
         if(!lookingForItem) {
             loading=false;
             //No more items... close the item page..and parents should close too if empty
-            gr.setCloseIfEmpty(true);
-            itemMenu.close();            
+            gr.setCloseIfEmpty(true);           
             pageStack.pop();
         }
     }
@@ -136,77 +214,4 @@ Page {
             itemId = entryid;
         }
     }
-
-   /* ToolBarLayout {
-        id: itemTools
-
-        ToolIcon { iconId: "toolbar-back"; onClicked: { itemMenu.close(); pageStack.pop(); }  }
-
-        BusyIndicator {
-            visible: loading
-            running: loading
-            platformStyle: BusyIndicatorStyle { size: 'medium' }
-        }
-        ToolIcon { iconId: "toolbar-down"; visible: !loading;
-            onClicked: {
-                if(unread) {
-                    var gr = rootWindow.getGoogleReader();
-                    gr.markEntryRead(feedId, itemId, true);
-                    unread = false;
-                }
-                startJumpToEntry();
-            } }
-        ToolIcon { iconId: "toolbar-view-menu" ; onClicked: (itemMenu.status === DialogStatus.Closed) ? itemMenu.open() : itemMenu.close() }
-    }
-
-    Menu {
-        id: itemMenu
-        visualParent: pageStack
-
-        MenuLayout {
-            MenuItem {
-                id: toggleUnread
-                text: ((unread)? qsTr("Mark item read") : qsTr("Mark item unread"))
-                onClicked: {
-                    var gr = rootWindow.getGoogleReader();
-                    gr.markEntryRead(feedId, itemId, unread, null);
-
-                    unread = !unread;
-                }
-            }
-
-            MenuItem {
-                id: openInBrowser
-                text: qsTr("Open in Web Browser")
-                enabled: (url && (url != "")) ? true: false
-                onClicked: {
-                    Qt.openUrlExternally(url);
-                }
-            }
-
-            MenuItem {
-                id: nextMode
-                visible: false
-                enabled: false
-                text: ((nextStaysInFeed)? qsTr("Next Button: Stay in Feed"):
-                                          ((nextStaysInCategory) ? qsTr("Next Button: Stay in Category") :
-                                                                   qsTr("Next Button: Any Category")))
-                onClicked: {
-                    if(nextStaysInFeed) {
-                        //Change to category
-                        nextStaysInCategory = true;
-                        nextStaysInFeed = false;
-                    } else if(nextStaysInCategory) {
-                        //Change to no restriction
-                        nextStaysInCategory = false;
-                        nextStaysInFeed = false;
-                    } else {
-                        //Change to stay in feed
-                        nextStaysInCategory = true;
-                        nextStaysInFeed = true;
-                    }
-                }
-            }
-        }
-    } */
 }
