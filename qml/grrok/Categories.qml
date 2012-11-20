@@ -34,6 +34,35 @@ Page {
         }
         anchors.fill: parent
 
+        PullDownMenu {
+            MenuItem {
+                id: toggleUnread
+                text: qsTr("Toggle Unread Only")
+                onClicked: {
+                    var gr = rootWindow.getGoogleReader();
+                    var oldval = gr.getShowAll();
+                    var newval = !oldval;
+                    gr.setShowAll(newval);
+
+                    //console.log("Updating categories with showAll: "+newval+"\n");
+                    updateCategories();
+                }
+            }
+
+            MenuItem {
+                id: about
+                text: qsTr("About Grrok")
+                onClicked: {
+                    var component = Qt.createComponent("About.qml");
+                    if (component.status == Component.Ready) {
+                        pageStack.push(component);
+                    } else {
+                        console.log("Error loading component:", component.errorString());
+                    }
+                }
+            }
+        }
+
 
         delegate:  Item {
             id: listItem

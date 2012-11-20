@@ -23,7 +23,7 @@ Page {
 
     property bool loading: false
 
-    state: (screen.currentOrientation === Screen.Portrait) ? "portrait" : "landscape"
+    state: rootWindow.isPortrait ? "portrait" : "landscape"
 
     states: [
         State {

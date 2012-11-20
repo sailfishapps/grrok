@@ -15,9 +15,9 @@ import com.jolla.components 1.0
 import QtWebKit 1.1
 
 Page {
-    tools: aboutTools
+   // tools: aboutTools
 
-    state: (screen.currentOrientation === Screen.Portrait) ? "portrait" : "landscape"
+    state: rootWindow.isPortrait ? "portrait" : "landscape"
 
     states: [
         State {
@@ -114,10 +114,10 @@ Page {
         }
     }
 
-    ToolBarLayout {
+  /*  ToolBarLayout {
         id: aboutTools
 
         ToolIcon { iconId: "toolbar-back"; onClicked: {pageStack.pop(); }  }
-    }
+    }*/
 }
 
