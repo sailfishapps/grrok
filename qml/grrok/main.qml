@@ -10,11 +10,11 @@
 //in /usr/share/common-licenses. If not, see http://www.gnu.org/licenses/.
 
 import QtQuick 1.1
-import com.nokia.meego 1.0
+import com.jolla.components 1.0
 import "googlereader.js" as GoogleReader
 import "settings.js" as Settings
 
-PageStackWindow {
+ApplicationWindow {
     id: rootWindow
     property int feedStatusUpdates: 0
 

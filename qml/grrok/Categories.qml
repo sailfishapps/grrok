@@ -10,11 +10,11 @@
 //in /usr/share/common-licenses. If not, see http://www.gnu.org/licenses/.
 
 import QtQuick 1.1
-import com.nokia.meego 1.0
+import com.jolla.components 1.0
 
 Page {
     id: categoriesPage
-    tools: categoriesTools
+    // tools: categoriesTools
     anchors.margins: rootWindow.pageMargin
 
     property int numStatusUpdates
@@ -201,6 +201,7 @@ Page {
         showCategory(gr.pickCategory());
     }
 
+    /*
     ToolBarLayout {
         id: categoriesTools
 
@@ -212,8 +213,9 @@ Page {
         }
         ToolIcon { iconId: "toolbar-down"; visible: !loading; onClicked: { jumpToChosenCategory(); } }
         ToolIcon { iconId: "toolbar-view-menu" ; onClicked: (categoriesMenu.status === DialogStatus.Closed) ? categoriesMenu.open() : categoriesMenu.close() }
-    }
+    }*/
 
+    /*
     Menu {
         id: categoriesMenu
         visualParent: pageStack
@@ -246,5 +248,5 @@ Page {
                 }
             }
         }
-    }
+    }*/
 }

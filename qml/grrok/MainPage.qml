@@ -10,7 +10,7 @@
 //in /usr/share/common-licenses. If not, see http://www.gnu.org/licenses/.
 
 import QtQuick 1.1
-import com.nokia.meego 1.0
+import com.jolla.components 1.0
 
 Page {
     function openFile(file) {
@@ -142,6 +142,7 @@ Page {
         enabled: true
     }
 
+    /*
     BusyIndicator {
         visible: loading
         running: loading
@@ -151,7 +152,7 @@ Page {
             horizontalCenter: loginButton.horizontalCenter
         }
         platformStyle: BusyIndicatorStyle { size: 'large' }
-    }
+    }*/
 
     function feedTreeCreated(retcode, text) {
         var settings = rootWindow.settingsObject();
@@ -169,8 +170,9 @@ Page {
             settings.set("dologin", "false");
 
             //Let the user know
-            loginErrorDialogText.text = text;
-            loginErrorDialog.open();
+            //loginErrorDialogText.text = text;
+            //loginErrorDialog.open();
+
         } else {
             //Login succeeded, auto login next Time
             settings.set("dologin", "true");
@@ -211,7 +213,7 @@ Page {
     }
 
     //Dialog for login errors
-     Dialog {
+     /*Dialog {
        id: loginErrorDialog
        title: Rectangle {
          id: titleField
@@ -233,12 +235,13 @@ Page {
          }
        }
 
+       /*
        buttons: ButtonRow {
          style: ButtonStyle { }
            anchors.horizontalCenter: parent.horizontalCenter
            Button {text: "OK"; onClicked: loginErrorDialog.accept()}
          }
-       }
+       }*/
 
     Component.onCompleted: {
         var settings = rootWindow.settingsObject();

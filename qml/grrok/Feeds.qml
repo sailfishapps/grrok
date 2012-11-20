@@ -10,11 +10,11 @@
 //in /usr/share/common-licenses. If not, see http://www.gnu.org/licenses/.
 
 import QtQuick 1.1
-import com.nokia.meego 1.0
+import com.jolla.components 1.0
 
 Page {
     id: feedsPage
-    tools: feedsTools
+   // tools: feedsTools
     property string categoryId: ""
     property int numStatusUpdates
     property bool loading: false
@@ -257,7 +257,7 @@ Page {
         }
     }
 
-    ToolBarLayout {
+/*    ToolBarLayout {
         id: feedsTools
 
         ToolIcon { iconId: "toolbar-back"; onClicked: { feedsMenu.close(); pageStack.pop(); } }
@@ -289,5 +289,5 @@ Page {
                 }
             }
         }
-    }
+    }*/
 }
