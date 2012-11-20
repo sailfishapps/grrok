@@ -26,32 +26,29 @@ Page {
         id: feedsModel
     }
 
-    Component {
-        id: listHeading
-        Rectangle {
-            width: parent.width
-            height: 60
-            radius: 10
-            color: "lightsteelblue"
-
-            Text {
-                anchors {
-                    horizontalCenter: parent.horizontalCenter
-                    verticalCenter: parent.verticalCenter
-                }
-
-                text: pageTitle
-                font.weight: Font.Bold
-                font.pixelSize: 26
-            }
-        }
-    }
-
-    ListView {
+    JollaListView {
         id: listView
         anchors.fill: parent
         model: feedsModel
-        header: listHeading
+        header:  PageHeader {
+            title: pageTitle
+        }
+
+        PullDownMenu {
+            MenuItem {
+                id: toggleUnread
+                text: qsTr("Toggle Unread Only")
+                onClicked: {
+                    var gr = rootWindow.getGoogleReader();
+                    var oldval = gr.getShowAll();
+                    var newval = !oldval;
+                    gr.setShowAll(newval);
+
+                    //console.log("Updating categories with showAll: "+newval+"\n");
+                    updateFeeds();
+                }
+            }
+        }
 
         delegate:  Item {
             id: listItem
@@ -77,18 +74,16 @@ Page {
                     Label {
                         id: mainText
                         text: model.title
-                        font.weight: Font.Bold
-                        font.pixelSize: 26
-                        color: (model.unreadcount > 0) ? "#000033" : "#888888";
+                        font.pixelSize: theme.fontSizeMedium
+                        color: (model.unreadcount > 0) ? theme.primaryColor: theme.secondaryColor;
 
                     }
 
                     Label {
                         id: subText
                         text: model.subtitle
-                        font.weight: Font.Light
-                        font.pixelSize: 22
-                        color: (model.unreadcount > 0) ? "#cc6633" : "#888888"
+                        font.pixelSize: theme.fontSizeSmall
+                        color: (model.unreadcount > 0) ? theme.highlightColor : theme.secondaryHighlightColor
 
                         visible: text != ""
                     }
@@ -268,26 +263,6 @@ Page {
         }
         ToolIcon { iconId: "toolbar-down"; visible: !loading; onClicked: { jumpToChosenFeed(); } }
         ToolIcon { iconId: "toolbar-view-menu" ; onClicked: (feedsMenu.status == DialogStatus.Closed) ? feedsMenu.open() : feedsMenu.close() }
-    }
-
-    Menu {
-        id: feedsMenu
-        visualParent: pageStack
-
-        MenuLayout {
-            MenuItem {
-                id: toggleUnread
-                text: qsTr("Toggle Unread Only")
-                onClicked: {
-                    var gr = rootWindow.getGoogleReader();
-                    var oldval = gr.getShowAll();
-                    var newval = !oldval;
-                    gr.setShowAll(newval);
-
-                    //console.log("Updating categories with showAll: "+newval+"\n");
-                    updateFeeds();
-                }
-            }
-        }
     }*/
+
 }

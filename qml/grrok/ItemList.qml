@@ -25,36 +25,42 @@ Page {
     ListModel {
         id: itemListModel
     }
-    Component {
-        id: listHeading
-
-        Rectangle {
-            width: parent.width
-            height: 60
-            radius: 10
-            color: "lightgreen"
-            clip: true
-
-            Text {
-                anchors {
-                    horizontalCenter: parent.horizontalCenter
-                    verticalCenter: parent.verticalCenter
-                }
-
-                text: pageTitle
-                font.weight: Font.Bold
-                font.pixelSize: 26
-                elide: Text.ElideRight
-            }
-        }
-    }
 
 
-    ListView {
+
+    JollaListView {
         id: listView
         anchors.fill: parent
         model: itemListModel
-        header: listHeading
+        header: PageHeader {
+            title: pageTitle
+        }
+
+        PullDownMenu {
+            MenuItem {
+                id: toggleUnread
+                text: "Toggle Unread Only"
+                onClicked: {
+                    var gr = rootWindow.getGoogleReader();
+                    var oldval = gr.getShowAll();
+                    var newval = !oldval;
+                    gr.setShowAll(newval);
+
+                    //console.log("Updating categories with showAll: "+newval+"\n");
+                    retrieveItemListData();
+                }
+            }
+
+            MenuItem {
+                id: markAllRead
+                text: "Mark All Read"
+                enabled: (feedId != "")
+                onClicked: {
+                    var gr = rootWindow.getGoogleReader();
+                    gr.markFeedRead(feedId, markFeedReadCompleted);
+                }
+            }
+        }
 
         delegate:  Item {
             id: listItem
@@ -78,22 +84,19 @@ Page {
                 Column {
                     anchors.verticalCenter: parent.verticalCenter
                     clip: true
-
                     Label {
                         id: mainText
                         text: model.title
-                        font.weight: Font.Bold
-                        font.pixelSize: 26
-                        color: (model.unread) ? "#000033" : "#888888"
+                        font.pixelSize: theme.fontSizeMedium
+                        color: model.unread? theme.primaryColor: theme.secondaryColor;
                         elide: Text.ElideRight
                     }
 
                     Label {
                         id: subText
                         text: model.subtitle
-                        font.weight: Font.Light
-                        font.pixelSize: 22
-                        color: (model.unread) ? "#cc6633" : "#888888"
+                        font.pixelSize: theme.fontSizeSmall
+                        color: model.unread? theme.highlightColor : theme.secondaryHighlightColor
                         elide: Text.ElideRight
                         visible: text != ""
                     }
@@ -292,36 +295,5 @@ Page {
         }
         ToolIcon { iconId: "toolbar-down"; visible: !loading; onClicked: { startJumpToEntry(); } }
         ToolIcon { iconId: "toolbar-view-menu" ; onClicked: (itemListMenu.status == DialogStatus.Closed) ? itemListMenu.open() : itemListMenu.close() }
-    }
-
-    Menu {
-        id: itemListMenu
-        visualParent: pageStack
-
-        MenuLayout {
-            MenuItem {
-                id: toggleUnread
-                text: "Toggle Unread Only"
-                onClicked: {
-                    var gr = rootWindow.getGoogleReader();
-                    var oldval = gr.getShowAll();
-                    var newval = !oldval;
-                    gr.setShowAll(newval);
-
-                    //console.log("Updating categories with showAll: "+newval+"\n");
-                    retrieveItemListData();
-                }
-            }
-
-            MenuItem {
-                id: markAllRead
-                text: "Mark All Read"
-                enabled: (feedId != "")
-                onClicked: {
-                    var gr = rootWindow.getGoogleReader();
-                    gr.markFeedRead(feedId, markFeedReadCompleted);
-                }
-            }
-        }
     }*/
 }

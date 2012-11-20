@@ -249,39 +249,4 @@ Page {
         ToolIcon { iconId: "toolbar-down"; visible: !loading; onClicked: { jumpToChosenCategory(); } }
         ToolIcon { iconId: "toolbar-view-menu" ; onClicked: (categoriesMenu.status === DialogStatus.Closed) ? categoriesMenu.open() : categoriesMenu.close() }
     }*/
-
-    /*
-    Menu {
-        id: categoriesMenu
-        visualParent: pageStack
-
-        MenuLayout {
-            MenuItem {
-                id: toggleUnread
-                text: qsTr("Toggle Unread Only")
-                onClicked: {
-                    var gr = rootWindow.getGoogleReader();
-                    var oldval = gr.getShowAll();
-                    var newval = !oldval;
-                    gr.setShowAll(newval);
-
-                    //console.log("Updating categories with showAll: "+newval+"\n");
-                    updateCategories();
-                }
-            }
-
-            MenuItem {
-                id: about
-                text: qsTr("About Grrok")
-                onClicked: {
-                    var component = Qt.createComponent("About.qml");
-                    if (component.status == Component.Ready) {
-                        pageStack.push(component);
-                    } else {
-                        console.log("Error loading component:", component.errorString());
-                    }
-                }
-            }
-        }
-    }*/
 }
