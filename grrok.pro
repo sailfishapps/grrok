@@ -26,6 +26,10 @@ symbian:TARGET.CAPABILITY += NetworkServices
 # Speed up launching on MeeGo/Harmattan when using applauncherd daemon
 CONFIG += qdeclarative-boostable
 
+contains(CONFIG, desktop) {
+   QT += opengl
+   DEFINES += DESKTOP
+}
 # Add dependency to Symbian components
 # CONFIG += qt-components
 
