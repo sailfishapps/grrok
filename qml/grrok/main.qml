@@ -17,6 +17,7 @@ import "settings.js" as Settings
 ApplicationWindow {
     id: rootWindow
     property int feedStatusUpdates: 0
+    property int unreadCount
 
     function getGoogleReader() {
         return GoogleReader;
@@ -32,7 +33,20 @@ ApplicationWindow {
 
     initialPage: mainPage
 
-    cover: undefined
+    cover: Rectangle {
+        anchors.fill: parent
+        color: "black"
+        Label {
+            anchors.centerIn: parent
+            id: coverText
+            text: "Grrok RSS"
+            font.pixelSize: theme.fontSizeSmall
+        }
+    }
+
+    onUnreadCountChanged: {
+        coverText.text = unreadCount + " unread items"
+    }
 
     MainPage {
         id: mainPage

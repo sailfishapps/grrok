@@ -173,7 +173,7 @@ Page {
                 }
             }
 
-            if(   (totalUnreadCount > 0)
+            if( (totalUnreadCount > 0)
                     || ((showAll) && someCategories)) {
                 //Add the "All category"
                 categoriesModel.insert(0, {
@@ -199,6 +199,10 @@ Page {
                                            unreadcount: 0,
                                        });
             }
+
+            rootWindow.unreadCount = totalUnreadCount
+
+
         }
     }
 
