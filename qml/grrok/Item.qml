@@ -132,8 +132,9 @@ Page {
                         gr.markEntryRead(feedId, itemId, true);
                         unread = false;
                     }
-                    if(!loading)
+                    if(!loading) {
                         startJumpToEntry();
+                    }
                 }
             }
             z:1

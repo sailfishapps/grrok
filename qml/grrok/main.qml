@@ -32,6 +32,8 @@ ApplicationWindow {
 
     initialPage: mainPage
 
+    cover: undefined
+
     MainPage {
         id: mainPage
     }
