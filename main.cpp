@@ -33,11 +33,10 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     bool isDesktop = app->arguments().contains("-desktop");
 #endif
 
-    QString path;
-    if (isDesktop) {
+    QString path("/opt/grrok/"); //default install
+    qDebug() << app->applicationDirPath() + QDir::separator() + "qml/grrok/main.qml";
+    if (isDesktop || QFile::exists(app->applicationDirPath() + QDir::separator() + "qml/grrok/main.qml")) {
         path = app->applicationDirPath() + QDir::separator();
-    } else {
-        path = QString("/opt/grrok/");
     }
 
     view->setSource(path + QLatin1String("qml/grrok/main.qml"));
