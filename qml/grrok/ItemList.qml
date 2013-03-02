@@ -10,25 +10,21 @@
 //in /usr/share/common-licenses. If not, see http://www.gnu.org/licenses/.
 
 import QtQuick 1.1
-import com.jolla.components 1.0
+import Sailfish.Silica 1.0
 
 Page {
     id: itemListPage
-  //  tools: itemListTools
+
     property string feedId: ""
     property string pageTitle: "Loading..."
     property int numStatusUpdates
     property bool loading: false
 
-    anchors.margins: rootWindow.pageMargin
-
     ListModel {
         id: itemListModel
     }
 
-
-
-    JollaListView {
+    SilicaListView {
         id: listView
         anchors.fill: parent
         model: itemListModel
@@ -46,7 +42,6 @@ Page {
                     var newval = !oldval;
                     gr.setShowAll(newval);
 
-                    //console.log("Updating categories with showAll: "+newval+"\n");
                     retrieveItemListData();
                 }
                 z:1
@@ -73,52 +68,9 @@ Page {
             height: 88
             width: parent.width
 
-            BorderImage {
+            BackgroundItem {
                 id: background
                 anchors.fill: parent
-                // Fill page borders
-                anchors.leftMargin: -itemListPage.anchors.leftMargin
-                anchors.rightMargin: -itemListPage.anchors.rightMargin
-                visible: mouseArea.pressed
-                source: "image://theme/meegotouch-list-background-pressed-center"
-            }
-
-            Row {
-                anchors.fill: parent
-                clip: true
-
-                Column {
-                    anchors.verticalCenter: parent.verticalCenter
-                    clip: true
-                    Label {
-                        id: mainText
-                        text: model.title
-                        font.pixelSize: theme.fontSizeMedium
-                        color: model.unread? theme.primaryColor: theme.secondaryColor;
-                        elide: Text.ElideRight
-                    }
-
-                    Label {
-                        id: subText
-                        text: model.subtitle
-                        font.pixelSize: theme.fontSizeSmall
-                        color: model.unread? theme.highlightColor : theme.secondaryHighlightColor
-                        elide: Text.ElideRight
-                        visible: text != ""
-                    }
-                }
-            }
-
-            Image {
-                source: "image://theme/icon-m-common-drilldown-arrow" + (theme.inverted ? "-inverse" : "")
-                anchors.right: parent.right;
-                anchors.verticalCenter: parent.verticalCenter
-                visible: ((model.id != null)&&(model.id != "__grrok_get_more_items"))
-            }
-
-            MouseArea {
-                id: mouseArea
-                anchors.fill: background
                 onClicked: {
                     if(model.id) {
                         if(model.id === "__grrok_get_more_items") {
@@ -134,10 +86,47 @@ Page {
                     }
                 }
             }
+
+            Row {
+                anchors {
+                    fill: parent
+                    rightMargin: theme.paddingMedium
+                    leftMargin: theme.paddingMedium
+                }    clip: true
+
+                Column {
+                    width: parent.width-drilldown.width
+                    anchors.verticalCenter: parent.verticalCenter
+                    clip: true
+                    Label {
+                        id: mainText
+                        text: model.title
+                        font.pixelSize: theme.fontSizeMedium
+                        color: model.unread? theme.primaryColor: theme.secondaryColor;
+                        truncationMode: TruncationMode.Fade
+                        width: parent.width
+                    }
+
+                    Label {
+                        id: subText
+                        text: model.subtitle
+                        font.pixelSize: theme.fontSizeSmall
+                        color: model.unread? theme.highlightColor : theme.secondaryHighlightColor
+                        visible: text != ""
+                        truncationMode: TruncationMode.Fade
+                        width: parent.width
+                    }
+                }
+            }
+
+            Image {
+                id: drilldown
+                source: "image://theme/icon-m-common-drilldown-arrow"
+                anchors.right: parent.right;
+                anchors.verticalCenter: parent.verticalCenter
+                visible: ((model.id != null)&&(model.id != "__grrok_get_more_items"))
+            }
         }
-    }
-    ScrollDecorator {
-        flickableItem: listView
     }
 
     Timer {

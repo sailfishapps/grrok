@@ -11,13 +11,11 @@
 
 
 import QtQuick 1.1
-import com.jolla.components 1.0
-import QtWebKit 1.1
+import Sailfish.Silica 1.0
+import QtWebKit 1.0
 
 Page {
-   // tools: aboutTools
-
-    state: rootWindow.isPortrait ? "portrait" : "landscape"
+    state: (rootWindow.orientation === Orientation.Portrait)? "portrait" : "landscape"
 
     states: [
         State {
@@ -114,10 +112,5 @@ Page {
         }
     }
 
-  /*  ToolBarLayout {
-        id: aboutTools
-
-        ToolIcon { iconId: "toolbar-back"; onClicked: {pageStack.pop(); }  }
-    }*/
 }
 

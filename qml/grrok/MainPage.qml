@@ -10,7 +10,7 @@
 //in /usr/share/common-licenses. If not, see http://www.gnu.org/licenses/.
 
 import QtQuick 1.1
-import com.jolla.components 1.0
+import Sailfish.Silica 1.0
 
 Page {
     function openFile(file) {
@@ -23,7 +23,7 @@ Page {
 
     property bool loading: false
 
-    state: rootWindow.isPortrait ? "portrait" : "landscape"
+    state: (rootWindow.orientation === Orientation.Portrait)? "portrait" : "landscape"
 
     states: [
         State {
@@ -112,6 +112,8 @@ Page {
         TextField {
             id: username
             text: ""
+            placeholderText: "username"
+            width: 240
         }
         Label {
             id: passwordLabel
@@ -120,6 +122,8 @@ Page {
         TextField {
             id: password
             echoMode: TextInput.PasswordEchoOnEdit
+            placeholderText: "password"
+            width: 240
         }
     }
     Button{
@@ -142,17 +146,7 @@ Page {
         enabled: true
     }
 
-    /*
-    BusyIndicator {
-        visible: loading
-        running: loading
-        anchors {
-            top: loginButton.bottom
-            topMargin: 20
-            horizontalCenter: loginButton.horizontalCenter
-        }
-        platformStyle: BusyIndicatorStyle { size: 'large' }
-    }*/
+
 
     function feedTreeCreated(retcode, text) {
         var settings = rootWindow.settingsObject();
@@ -170,11 +164,9 @@ Page {
             settings.set("dologin", "false");
 
             //Let the user know
-           loginErrorDialog.text = text;
-           loginErrorDialog.open();
-
+            loginErrorDialogText.text = text;
+            loginErrorDialog.open();
         } else {
-            console.log("Login ok")
             //Login succeeded, auto login next Time
             settings.set("dologin", "true");
 
@@ -214,20 +206,24 @@ Page {
     }
 
     //Dialog for login errors
-    Dialog {
-        id: loginErrorDialog
+     Dialog {
+       id: loginErrorDialog
 
-        property string text: "Hello Dialog"
 
-        sourceComponent: Text {
-            font.pixelSize: 22
-            anchors.centerIn: parent
-            color: "white"
-            text: loginErrorDialog.text
-        }
+       sourceComponent:
+         Text {
+           id: loginErrorDialogText
+           font.pixelSize: 22
+           anchors.centerIn: parent
+           color: "white"
+           text: "Hello Dialog"
+         }
 
-        acceptText: "OK";
-    }
+       DialogHeader {
+
+           acceptText: "Ok"
+       }
+     }
 
     Component.onCompleted: {
         var settings = rootWindow.settingsObject();

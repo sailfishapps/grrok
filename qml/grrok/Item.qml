@@ -10,7 +10,7 @@
 //in /usr/share/common-licenses. If not, see http://www.gnu.org/licenses/.
 
 import QtQuick 1.1
-import com.jolla.components 1.0
+import Sailfish.Silica 1.0
 import QtWebKit 1.1
 
 Page {
@@ -27,7 +27,7 @@ Page {
 
     anchors.margins: 0
 
-    JollaFlickable {
+    SilicaFlickable {
         id: flick
         anchors.fill: parent
         contentWidth: itemView.width
@@ -141,9 +141,9 @@ Page {
         }
     }
 
-    ScrollDecorator {
+    /*ScrollDecorator {
         flickableItem: flick
-    }
+    }*/
 
     function updateItem(success, data) {
         //Stop the loading anim

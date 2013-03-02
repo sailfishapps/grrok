@@ -10,7 +10,7 @@
 //in /usr/share/common-licenses. If not, see http://www.gnu.org/licenses/.
 
 import QtQuick 1.1
-import com.jolla.components 1.0
+import Sailfish.Silica 1.0
 
 Page {
     id: feedsPage
@@ -20,13 +20,11 @@ Page {
     property bool loading: false
     property string pageTitle: ""
 
-    anchors.margins: rootWindow.pageMargin
-
     ListModel {
         id: feedsModel
     }
 
-    JollaListView {
+    SilicaListView {
         id: listView
         anchors.fill: parent
         model: feedsModel
@@ -56,31 +54,32 @@ Page {
 
         delegate:  Item {
             id: listItem
-            height: 88
+            height: theme.itemSizeMedium
             width: parent.width
 
-            BorderImage {
+            BackgroundItem {
                 id: background
                 anchors.fill: parent
-                // Fill page borders
-                anchors.leftMargin: -feedsPage.anchors.leftMargin
-                anchors.rightMargin: -feedsPage.anchors.rightMargin
-                visible: mouseArea.pressed
-                source: "image://theme/meegotouch-list-background-pressed-center"
+                onClicked: showFeed(model.feedId);
             }
 
             Row {
-                anchors.fill: parent
-
+                anchors {
+                    fill: parent
+                    rightMargin: theme.paddingMedium
+                    leftMargin: theme.paddingMedium
+                }
                 Column {
                     anchors.verticalCenter: parent.verticalCenter
+                    width: parent.width - drilldown.width
 
                     Label {
                         id: mainText
                         text: model.title
                         font.pixelSize: theme.fontSizeMedium
                         color: (model.unreadcount > 0) ? theme.primaryColor: theme.secondaryColor;
-
+                        truncationMode: TruncationMode.Fade
+                        width: parent.width
                     }
 
                     Label {
@@ -88,30 +87,21 @@ Page {
                         text: model.subtitle
                         font.pixelSize: theme.fontSizeSmall
                         color: (model.unreadcount > 0) ? theme.highlightColor : theme.secondaryHighlightColor
-
+                        truncationMode: TruncationMode.Fade
                         visible: text != ""
+                        width: parent.width
                     }
                 }
             }
 
             Image {
-                source: "image://theme/icon-m-common-drilldown-arrow" + (theme.inverted ? "-inverse" : "")
+                id: drilldown
+                source: "image://theme/icon-m-common-drilldown-arrow"
                 anchors.right: parent.right;
                 anchors.verticalCenter: parent.verticalCenter
                 visible: (model.feedId != null)
             }
-
-            MouseArea {
-                id: mouseArea
-                anchors.fill: background
-                onClicked: {
-                    showFeed(model.feedId);
-                }
-            }
         }
-    }
-    ScrollDecorator {
-        flickableItem: listView
     }
 
     Timer {

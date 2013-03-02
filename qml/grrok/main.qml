@@ -10,14 +10,32 @@
 //in /usr/share/common-licenses. If not, see http://www.gnu.org/licenses/.
 
 import QtQuick 1.1
-import com.jolla.components 1.0
+import Sailfish.Silica 1.0
 import "googlereader.js" as GoogleReader
 import "settings.js" as Settings
 
 ApplicationWindow {
     id: rootWindow
-    property int feedStatusUpdates: 0
+
     property int unreadCount
+
+    cover: Rectangle {
+        anchors.fill: parent
+        color: "black"
+        Label {
+            anchors.centerIn: parent
+            id: coverText
+            text: "Grrok RSS"
+            font.pixelSize: theme.fontSizeSmall
+        }
+    }
+
+
+    onUnreadCountChanged: {
+        coverText.text = unreadCount+ " unread items"
+    }
+
+    property int feedStatusUpdates: 0
 
     function getGoogleReader() {
         return GoogleReader;
@@ -32,21 +50,6 @@ ApplicationWindow {
     property int pageMargin: 16
 
     initialPage: mainPage
-
-    cover: Rectangle {
-        anchors.fill: parent
-        color: "black"
-        Label {
-            anchors.centerIn: parent
-            id: coverText
-            text: "Grrok RSS"
-            font.pixelSize: theme.fontSizeSmall
-        }
-    }
-
-    onUnreadCountChanged: {
-        coverText.text = unreadCount + " unread items"
-    }
 
     MainPage {
         id: mainPage

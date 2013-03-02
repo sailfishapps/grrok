@@ -10,12 +10,10 @@
 //in /usr/share/common-licenses. If not, see http://www.gnu.org/licenses/.
 
 import QtQuick 1.1
-import com.jolla.components 1.0
+import Sailfish.Silica 1.0
 
 Page {
     id: categoriesPage
-    // tools: categoriesTools
-    anchors.margins: rootWindow.pageMargin
 
     property int numStatusUpdates
     property bool loading: false
@@ -24,15 +22,16 @@ Page {
         id: categoriesModel
     }
 
-
-    JollaListView {
+    SilicaListView {
         id: listView
+        anchors.fill: parent
 
         model: categoriesModel
-        header: PageHeader {
-            title: "Categories"
-        }
-        anchors.fill: parent
+
+        header:
+            PageHeader {
+                title: "Categories"
+            }
 
         PullDownMenu {
             MenuItem {
@@ -63,30 +62,28 @@ Page {
             }
 
             MenuItem {
-                id: jump
-                text: qsTr("Jump to next")
-                onClicked: if(!loading) { jumpToChosenCategory(); }
+                text: "Jump to next"
+                onClicked: if(!loading){ jumpToChosenCategory(); }
             }
-        }
 
+        }
 
         delegate:  Item {
             id: listItem
-            height: 88
-            width: parent.width
+            height: theme.itemSizeMedium
+            anchors.right: parent.right
+            anchors.left: parent.left
 
-            BorderImage {
+            BackgroundItem {
                 id: background
                 anchors.fill: parent
-                // Fill page borders
-                anchors.leftMargin: -categoriesPage.anchors.leftMargin
-                anchors.rightMargin: -categoriesPage.anchors.rightMargin
-                visible: mouseArea.pressed
-                source: "image://theme/meegotouch-list-background-pressed-center"
+                onClicked: showCategory(model.categoryId);
             }
 
             Row {
                 anchors.fill: parent
+                anchors.rightMargin: theme.paddingMedium
+                anchors.leftMargin: theme.paddingMedium
 
                 Column {
                     anchors.verticalCenter: parent.verticalCenter
@@ -94,16 +91,15 @@ Page {
                     Label {
                         id: mainText
                         text: model.title
-                        // font.weight: Font.Bold
+
                         font.pixelSize: theme.fontSizeMedium
-                        color: (model.unreadcount > 0) ? theme.primaryColor: theme.secondaryColor;
+                        color: (model.unreadcount > 0) ? theme.primaryColor : theme.secondaryColor;
 
                     }
 
                     Label {
                         id: subText
                         text: model.subtitle
-                        //  font.weight: Font.Light
                         font.pixelSize: theme.fontSizeSmall
                         color: (model.unreadcount > 0) ? theme.highlightColor : theme.secondaryHighlightColor
 
@@ -113,25 +109,14 @@ Page {
             }
 
             Image {
-                source: "image://theme/icon-m-common-drilldown-arrow" + (theme.inverted ? "-inverse" : "")
+                source: "image://theme/icon-m-common-drilldown-arrow"
                 anchors.right: parent.right;
                 anchors.verticalCenter: parent.verticalCenter
                 visible: ((model.categoryId != null)? true: false)
             }
 
-            MouseArea {
-                id: mouseArea
-                anchors.fill: background
-                onClicked: {
-                    showCategory(model.categoryId);
-                }
-            }
         }
     }
-    ScrollDecorator {
-        flickableItem: listView
-    }
-
 
     function updateCategories() {
         var gr = rootWindow.getGoogleReader();
@@ -173,8 +158,8 @@ Page {
                 }
             }
 
-            if( (totalUnreadCount > 0)
-                    || ((showAll) && someCategories)) {
+            if(   (totalUnreadCount > 0)
+               || ((showAll) && someCategories)) {
                 //Add the "All category"
                 categoriesModel.insert(0, {
                                            title: qsTr("All Categories"),
@@ -201,8 +186,6 @@ Page {
             }
 
             rootWindow.unreadCount = totalUnreadCount
-
-
         }
     }
 
@@ -245,5 +228,4 @@ Page {
         var gr = rootWindow.getGoogleReader();
         showCategory(gr.pickCategory());
     }
-
 }
